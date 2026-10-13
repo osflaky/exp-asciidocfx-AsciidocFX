@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        body{
+            background: white;
+        }
+        .treeview-container{
+            display: inline-block;
+        }
+    </style>
+    <link rel="stylesheet" href="/afx/resource/css/?p=css/prism.css" type="text/css"/>
+    <script src="/afx/resource/js/?p=js/jquery.js"></script>
+    <script src="/afx/resource/js/?p=js/prism.js"></script>
+    <script>
+        window.Prism = window.Prism || {};
+        Prism.manual = true;
+    </script>
+    <title></title>
+</head>
+<body>
+<div class="treeview-container">
+    <pre><code class="language-treeview"></code></pre>
+</div>
+<script>
+
+    function executeTree(tree) {
+        var view = document.querySelector(".treeview-container > pre > code");
+        view.innerHTML = tree;
+        Prism.highlightAll(false, () => {
+            let view = document.querySelector(".treeview-container");
+            let zoom = treeview.getZoom();
+            let width = (view.offsetWidth * zoom) + 250;
+            let height = (view.offsetHeight * zoom) + 250;
+            treeview.setPrefSize(width, height);
+            setTimeout(() => {
+                alert("RENDERED");
+            }, 500);
+        });
+    }
+
+    (function () {
+        alert("READY");
+    })();
+
+
+</script>
+<!--<script src="/afx/resource/js/?p=js/firebug-import.js"></script>-->
+</body>
+</html>

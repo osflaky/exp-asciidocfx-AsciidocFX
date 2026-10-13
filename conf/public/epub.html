@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>AsciidocFX</title>
+    <link rel="stylesheet" href="/afx/epub/css/?p=css/epub.css"/>
+</head>
+<body>
+
+<div id="main">
+    <div id="prev" onclick="Book.prevPage();" class="arrow">‹</div>
+    <div id="area"></div>
+    <div id="next" onclick="Book.nextPage();" class="arrow">›</div>
+</div>
+
+<script src="/afx/epub/js/?p=js/epub.min.js"></script>
+<script src="/afx/epub/js/?p=js/zip.min.js"></script>
+<script>
+    var Book = ePub("booki.epub");
+    Book.renderTo("area");
+
+    document.onkeydown = function(e) {
+        e = e || window.event;
+        if (e.keyCode == 37)
+            Book.prevPage();
+        else if (e.keyCode == 39)
+            Book.nextPage();
+    };
+</script>
+</body>
+</html>

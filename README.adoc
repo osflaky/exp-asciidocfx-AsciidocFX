@@ -1,0 +1,707 @@
+= Asciidoc Editor based on JavaFX 20
+:experimental:
+ifdef::env-github[]
+:toc:
+:toc-placement: preamble
+endif::[]
+ifndef::env-github[]
+:toc:
+:toc-placement: left
+endif::[]
+:imagesdir: images
+:asciidocfx-version: 1.8.11
+:download-root: https://github.com/asciidocfx/AsciidocFX/releases/download/v{asciidocfx-version}/
+
+image:https://opencollective.com/AsciidocFX/backers/badge.svg["Backers on Open Collective", link="#backers"]
+image:https://opencollective.com/AsciidocFX/sponsors/badge.svg["Sponsors on Open Collective", link="#sponsors"]
+image:https://api.travis-ci.org/asciidocfx/AsciidocFX.svg?branch=master[Build Status,link="https://travis-ci.org/asciidocfx/AsciidocFX"]
+image:https://badges.gitter.im/Join%20Chat.svg["Gitter", link="https://gitter.im/asciidocfx/AsciidocFX"]
+
+Asciidoc FX is an WYSIWYG editor for Asciidoc markup language. You can build PDF, Epub, and HTML books, documents and slides. AsciidocFX is also a winner of https://www.oracle.com/corporate/pressrelease/dukes-award-102815.html[Duke's Choice Award 2015].
+
+.AsciidocFX - Duke's Choice Award 2015 winner
+image::asciidocfx.png[]
+
+== Features
+
+* Real-Time Preview
+* Multi-platform (Windows, Mac, Linux)
+* Creating Asciidoc Books
+* Creating PDF, HTML, Epub, Mobi, Docbook
+* Epub Viewer
+* External Browser Support
+* Table Generator
+* MathJax Extension
+* PlantUML Extension
+* Mermaid Extension (Experimental)
+* ditaa Extension
+* Filesystem Tree Extension
+* JavaFX Charts Extension
+* Source Code Highlighter
+* Reveal.js Converter
+* Deck.js Converter
+* Nashorn support
+* Pseudo Terminal Emulator
+* Themeing (Dark & White) _New _
+
+== Pseudo Terminal Emulator
+
+image::http://i.giphy.com/l3vR4SlEtY3juZfXy.gif[Pseudo Terminal Emulator]
+
+== How to Install AsciidocFX
+
+There are a number of operating systems that AsciidocFX supports.
+
+NOTE: The latest releases are available from the https://github.com/asciidocfx/AsciidocFX/releases[Github releases page].
+
+<<Supported_OS>> shows the list of available builds with links for reference. If you are looking for the very latest version, visit the link in the note above to be guaranteed of downloading the latest and greatest version of AsciidocFX.
+
+NOTE: Thanks image:https://www.ej-technologies.com/images/product_banners/install4j_small.png[link=https://www.ej-technologies.com/products/install4j/overview.html] for providing us open source license for the installers used in AsciidocFX distribution.
+
+NOTE: In all releases we use AdoptOpenJDK JREs, so you will not have any licensing issue regarding bundled JRE.
+
+[[Supported_OS]]
+.Supported Operating Systems and Builds
+[width="100%",options="header"]
+|====================
+| OS | Filename
+| Mac | {download-root}AsciidocFX_Mac.dmg[AsciidocFX_Mac.dmg]
+| Mac M1 | {download-root}AsciidocFX_Mac_M1.dmg[AsciidocFX_Mac_M1.dmg]
+| Windows | {download-root}AsciidocFX_Windows.exe[AsciidocFX_Windows.exe]
+| Windows | {download-root}AsciidocFX_Windows.zip[AsciidocFX_Windows.zip]
+| Linux
+| {download-root}AsciidocFX_Linux.tar.gz[AsciidocFX_Linux.tar.gz]
+| Linux DEB
+| {download-root}AsciidocFX_Linux_Deb.deb[AsciidocFX_Linux.deb]
+| Linux RPM
+| {download-root}AsciidocFX_Linux_Rpm.rpm[AsciidocFX_Linux.rpm]
+|====================
+
+=== Install on Linux
+
+You can install AsciidocFX through the Deb or Rpm installers or via Archive file.
+
+.Archive file
+[source,bash]
+----
+$ tar –xvzf AsciidocFX_Linux.tar.gz
+$ cd AsciidocFX/bin
+$ chmod +X ./AsciidocFX
+$ ./AsciidocFX
+----
+
+////
+=== Install on Arch Linux
+
+Install using the package manager in Arch Linux
+
+[source,bash]
+$ yaourt -S asciidocfx
+////
+
+=== Install on Windows
+
+Download executable/installer and run it.
+
+=== Install on Mac
+
+Download the `.dmg` and run it.
+
+or 
+
+Use https://brew.sh/[Homebrew] to install it with one command: `brew install --cask asciidocfx`
+
+////
+=== Installation Notes
+
+There are two AsciidocFX package flavors, you can download it with JRE 8 out-of-box or if you have already installed JRE 8 (Update 40 or above), you can download *No_JRE builds
+
+Graphviz::
+  PlantUML extension needs Graphviz, if you will use it, then install it:
++
+.Ubuntu
+[source,bash]
+----
+sudo apt-get install graphviz
+----
++
+.Mac OS X
+[source,bash]
+----
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew install graphviz
+----
++
+.Windows
+----
+http://www.graphviz.org/pub/graphviz/stable/windows/graphviz-2.38.msi
+----
+
+[[microsoft-core-fonts]]
+Microsoft Core Fonts::
+You _must_ install Microsoft Core Fonts on Linux OSes also.
+
+[underline]#Ubuntu/Debian#
+
+[source,bash]
+----
+sudo apt-get install ttf-mscorefonts-installer
+----
+
+[underline]#Fedora#
+
+If you are using Fedora, you need to install the RPM provided from this URL: http://sourceforge.net/projects/mscorefonts2/files/latest/download[mscorefonts2]
+
+KindleGen::
+You _must_ install http://www.amazon.com/gp/feature.html?docId=1000765211[KindleGen], If you need to convert your documents into Mobi files. Once you specify the location of KindleGen executable, Mobi Service provided by AFX will be available.
+
+////
+
+== A Quick Dive
+
+*http://youtu.be/2goMtz_vdtM[Video - Writing Books with Asciidoc FX]*
+
+== AsciidocFX Backends
+
+AsciidocFX can converts Asciidoc documents into HTML, PDF, EPUB3 and DOCBOOK5.
+
+AsciidocFX converts documents via AsciidoctorJ library. For the PDF backends alternatively Docbook -> Fop -> PDF conversion can be utilized.
+
+== AsciidocFX Extensions
+
+AsciidocFX supports many extensions like PlantUML, Ditaa, Charts, File Trees and many others Asciidoctor Diagram which can be found in https://docs.asciidoctor.org/diagram-extension/latest/
+
+== PlantUML Extension
+
+You can fulfill your UML needs with AsciidocFX. It supports PlantUML. AsciidocFX converts this textual UML elements as png or svg image.
+
+http://plantuml.sourceforge.net/[PlantUML] is a component that allows to quickly write :
+
+* Sequence diagram,
+* Usecase diagram,
+* Class diagram,
+* Activity diagram, (here is the new syntax),
+* Component diagram,
+* State diagram,
+* Object diagram.
+* wireframe graphical interface
+
+[source,java]
+----
+.UML Diagram Example
+[uml,target="uml-example"]
+--
+abstract class AbstractList
+abstract AbstractCollection
+interface List
+interface Collection
+
+List <|-- AbstractList
+Collection <|-- AbstractCollection
+
+Collection <|- List
+AbstractCollection <|- AbstractList
+AbstractList <|-- ArrayList
+
+class ArrayList {
+  Object[] elementData
+  size()
+}
+
+enum TimeUnit {
+  DAYS
+  HOURS
+  MINUTES
+}
+
+annotation SuppressWarnings
+--
+----
+.UML example output
+image::uml-example.png[]
+
+NOTE: In some UML elements, PlantUML needs to work with Graphviz. Because of this, you should install `Graphviz` manually for your platform. After installing Graphviz, you should set `GRAPHVIZ_DOT` environment variable to `dot` executable in Graphviz.
+
+== Mermaid Extension
+
+[quote]
+____
+Mermaid lets you create diagrams using text and code. This simplifies the maintenance of complex diagrams. **See more examples**: https://mermaid-js.github.io/
+____
+
+[NOTE]
+====
+mermaid-cli has to be installed for mermaid diagrams generation.
+
+[source,bash]
+----
+npm install @mermaid-js/mermaid-cli
+----
+
+Installation details: https://github.com/mermaid-js/mermaid-cli#install-locally
+====
+
+[source,asciidoc]
+----
+[mermaid,target="mermaid-graph"]
+--
+graph TD 
+    A[Start] --> B{Is it?};
+    B -- Yes --> C[OK];
+    C --> D[Rethink];
+    D --> B;
+    B -- No ----> E[End];
+--
+----
+
+image::mermaid-graph.png[]
+
+
+[source,asciidoc]
+----
+[mermaid,target="mermaid-flowchart"]
+--
+flowchart TB
+    c1-->a2
+    subgraph one
+    a1-->a2
+    end
+    subgraph two
+    b1-->b2
+    end
+    subgraph three
+    c1-->c2
+    end
+    one --> two
+    three --> two
+    two --> c2
+--
+----
+
+image::mermaid-flowchart.png[]
+
+== ditaa Extension
+
+AsciidocFX supports ditaa diagrams.
+
+http://ditaa.sourceforge.net/[ditaa] is a component that converts diagrams drawn in ascii art to bitmap graphics.
+
+[source,asciidoc]
+----
+.ditaa Diagram Example
+[ditaa,target="ditaa-example"]
+--
+    +--------+   +-------+    +-------+
+    |        |---+ ditaa +--->|       |
+    |  Text  |   +-------+    |diagram|
+    |Document|   |!magic!|    |       |
+    |     {d}|   |       |    |       |
+    +---+----+   +-------+    +-------+
+        :                         ^
+        |       Lots of work      |
+        +-------------------------+
+--
+----
+
+image::ditaa-example.png[]
+
+== MathJax Extension
+
+http://www.mathjax.org/[MathJax] is an open source JavaScript display engine for mathematics that works in all browsers.
+
+You can use `Tex` or `MathML` languages for describing mathematical formulas in AsciidocFX. AsciidocFX converts this textual formulas as png or svg image.
+
+.For Example (Tex)
+[source,tex]
+----
+[latexmath,target="tex-formula"]
+--
+\begin{align}
+\dot{x} & = \sigma(y-x) \\
+\dot{y} & = \rho x - y - xz \\
+\dot{z} & = -\beta z + xyp
+\end{align}
+--
+----
+
+== Tex output
+
+image::tex-formula.png[]
+
+.For Example (MathML)
+[source,xml]
+----
+[mathml,target="mathml-formula"]
+--
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi>x</mi>
+  <mo>=</mo>
+  <mrow>
+    <mfrac>
+      <mrow>
+        <mo>&#x2212;</mo>
+        <mi>b</mi>
+        <mo>&#xB1;</mo>
+        <msqrt>
+          <msup>
+            <mi>b</mi>
+            <mn>2</mn>
+          </msup>
+          <mo>&#x2212;</mo>
+          <mn>4</mn>
+          <mi>a</mi>
+          <mi>c</mi>
+        </msqrt>
+      </mrow>
+      <mrow>
+        <mn>2</mn>
+        <mi>a</mi>
+      </mrow>
+    </mfrac>
+  </mrow>
+  <mtext>.</mtext>
+</math>
+--
+----
+
+== MathML output
+image::mathml-formula.png[]
+
+== Filesystem Tree Extension
+
+You can represent filesystem tree in following `tree` block. There is two style of FS tree.
+
+[source,java]
+----
+[tree,target="tree-view"]
+--
+#src
+##main
+###java
+####com
+#####kodcu
+######App.java
+###resources
+####css
+#####style.css
+####js
+#####script.js
+####images
+#####image.png
+--
+----
+
+
+== Filesystem Tree output
+
+When you drag and drop a folder to editor, AFX will generate this like tree automatically.
+
+image::tree-view.png[width=320]
+
+[source,java]
+----
+[tree,target="tree-view-new"]
+--
+root
+|-- photos
+|   |-- camp.gif
+|   |-- festival.png
+|   `-- balloon.jpg
+|-- videos
+|   |-- car-video.avi
+|   |-- dance.mp4
+|   |-- dance01.mpg
+|   |-- another video.divx
+|   `-- school videos
+|       `-- firstday.flv
+|-- documents
+|   |-- jsfile.js
+|   |-- powerpoint.ppt
+|   |-- chapter-01.asc
+|   |-- archive-db.zip
+|   |-- .gitignore
+|   |-- README
+|   `-- configuration.conf
+`-- etc.
+--
+----
+
+== Filesystem Tree output (__new__)
+image::tree-view-new.png[width=250]
+
+== JavaFX Charts Extension
+
+JavaFX has 8 kind of Chart component and AsciidocFX supports all of them.
+
+=== Pie Chart
+
+image::secim-2014-pie.png[]
+
+----
+[chart,pie,target="secim-2014-pie",opt="title=2014 YEREL SEÇİM SONUÇLARI"]
+--
+AKP,  45.6, orange
+CHP,  27.8,red
+MHP,  15.2
+BDP,  4.2
+SP,  2
+--
+----
+
+'''
+
+=== Area Chart
+
+----
+[chart,area,target="area-chart"]
+--
+//April
+1,  4
+3,  10
+6,  15
+9,  8
+12, 5
+
+//May
+1,  20
+3,  15
+6,  13
+9,  12
+12, 14
+--
+----
+
+'''
+
+For other charts and available options, look at https://github.com/asciidocfx/AsciidocFX/wiki/Chart-Extension[Chart extension] wiki page!
+
+== How to Build AsciidocFX
+
+1. Firstly, install https://adoptium.net/temurin/releases[JDK 17]
+2. Download http://maven.apache.org/download.cgi[Apache Maven] and set `/bin` directory to environment variables
+3. Enter `AsciidocFX` directory and run `$ mvn clean install`
+4. Follow to `target/appassembler/bin` directory and you will see `asciidocfx.sh` and `asciidocfx.bat`
+
+NOTE: We are generating builds with *Github Actions* automatically.
+
+== Books Written with AsciidocFX
+
+Java 8 Ebook::
+* https://github.com/rahmanusta/java8-ebook[Github]
+* http://kodedu.com/java-8-ebook/[ePub + Kindle + PDF]
+
+AspectJ Ebook::
+* https://github.com/ozlerhakan/aspectj-ebook[Github]
+* http://kodcu.com/aspectj-ebook/[ePub + Kindle + PDF]
+
+Mastering Cloudforms Automation::
+* https://github.com/pemcg/manageiq-automation-howto-guide[Older version on GitHub]
+https://www.gitbook.com/book/pemcg/introduction-to-cloudforms-automation/details[and GitBook]
+* https://access.redhat.com/mastering-cloudforms-automation[ePub + Kindle + PDF]
+
+== Slides (Reveal.js)
+
+AsciidocFX supports slides by using the Asciidoctor Reveal.js backend. To getting start with slide authoring, you can just follow menu:New[Slide] menu.
+
+.menu:New[Slide]
+image::new-slide.png[]
+
+After that AFX will prompt you a freespace directory name and *"OK"* you will see the slide demo.
+
+.Slide demo
+image::slide-demo.png[]
+
+You can easily switch between reveal.js and deck.js by changing the comment below. Also, you can configure default settings by editing `_settings_reveal.adoc` and `include::_settings_deck.adoc`.
+
+[source,asciidoc]
+----
+
+\include::_settings_reveal.adoc[]
+
+----
+
+== Used Technologies
+
+AsciidocFX uses Java, JavaScript and XML related technologies.
+
+* Java FX 18
+* AsciidoctorJ
+* Asciidoctor.js (Deprecated)
+* Spring Boot
+* Spring WebSocket
+* Docbook
+* Apache Fop
+* Saxon 6.5
+* Ace editor
+
+== AsciidocFX Configuration
+
+You can configurate AsciidocFX with Settings page (Press kbd:[Ctrl+F4]). The all configs located in [Install_Dir]/conf folder.
+
+== Editor Shortcuts
+
+Editor in AsciidocFX is based on Ace.js ( https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts ) . AsciidocFX supports the keyboard shortcuts listed below. All are configurable under `Settings > Shortcut` settings. Keyboard events are handled by AsciidocFX, if you any reason want it handled by Ace.js itself, you can disable "Custom Shortcut Handler" in settings.
+
+[cols="4*", options="header"]
+|====
+| Description | Shortcut (Win/Linux) | Shortcut (Mac) | Command Name
+| Add cursor above | kbd:[Ctrl+Alt+Up] | kbd:[Ctrl+Alt+Up] | addCursorAbove
+| Add cursor above (skip current) | kbd:[Ctrl+Alt+Shift+Up] | kbd:[Ctrl+Alt+Shift+Up] | addCursorAboveSkipCurrent
+| Add cursor below | kbd:[Ctrl+Alt+Down] | kbd:[Ctrl+Alt+Down] | addCursorBelow
+| Add cursor below (skip current) | kbd:[Ctrl+Alt+Shift+Down] | kbd:[Ctrl+Alt+Shift+Down] | addCursorBelowSkipCurrent
+| Add new line after the current line | kbd:[Command+Return] | kbd:[Command+Return] | addLineAfter
+| Add new line before the current line | kbd:[Command+Shift+Return] | kbd:[Command+Shift+Return] | addLineBefore
+| Align cursors | kbd:[Ctrl+Alt+A] | kbd:[Ctrl+Alt+A] | alignCursors
+| Append Heading | kbd:[Ctrl+H] | kbd:[Ctrl+H] | add-heading
+| Backspace | kbd:[Shift+Backspace] OR kbd:[Backspace] | kbd:[Ctrl+Backspace] OR kbd:[Shift+Backspace] OR kbd:[Backspace] OR kbd:[Ctrl+H] | backspace
+| Block indent | kbd:[Ctrl+] | kbd:[Ctrl+] | blockindent
+| Block outdent | kbd:[Ctrl+[ ] | kbd:[Ctrl+[ ] | blockoutdent
+| Bold selection | kbd:[Ctrl+B] | kbd:[Command+B] | bold-selected
+| Center selection | | kbd:[Ctrl+L] | centerselection
+| Change language mode... | kbd:[Command+K] OR kbd:[Input+M] | kbd:[Command+K] OR kbd:[Input+M] | modeSelect
+| Codify selection | kbd:[Ctrl+Shift+C] | kbd:[Command+Shift+C] | codify-selected
+| Copies the selection in editor | kbd:[Ctrl+C] | kbd:[Command+C] | copyX
+| Copy Lines Down | kbd:[Ctrl+D] | kbd:[Command+D] | copylinesdown
+| Copy lines up | kbd:[Alt+Shift+Up] | kbd:[Command+Option+Up] | copylinesup
+| Cuts the selection in editor | kbd:[Ctrl+X] | kbd:[Command+X] | cutX
+| Delete | kbd:[Delete] OR kbd:[Ctrl+D] OR kbd:[Shift+Delete] | kbd:[Delete] OR kbd:[Ctrl+D] OR kbd:[Shift+Delete] | del
+| Duplicate selection | kbd:[Ctrl+Shift+D] | kbd:[Command+Shift+D] | duplicateSelection
+| Expand to line | kbd:[Ctrl+Shift+L] | kbd:[Command+Shift+L] | expandtoline
+| Expand to matching | kbd:[Ctrl+Shift+M] | kbd:[Ctrl+Shift+M] | expandToMatching
+| Find | kbd:[Ctrl+F] | kbd:[Command+F] | find
+| Find all | kbd:[Ctrl+Alt+K] | kbd:[Ctrl+Alt+G] | findAll
+| Find next | kbd:[Ctrl+K] | kbd:[Command+G] | findnext
+| Find previous | kbd:[Ctrl+Shift+K] | kbd:[Command+Shift+G] | findprevious
+| Fold | kbd:[Alt-L] OR kbd:[Ctrl-F1] | kbd:[Command-Alt-L] OR kbd:[Command-F1] | fold
+| Fold all | kbd:[Command+K] OR kbd:[Command+0] | kbd:[Ctrl+Command+Option+0] | foldall
+| Fold all comments | | kbd:[Ctrl+Command+Option+0] | foldAllComments
+| Fold other | kbd:[Alt+0] | kbd:[Command+Option+0] | foldOther
+| Go line down | kbd:[Down] OR kbd:[Ctrl+N] | kbd:[Down] OR kbd:[Ctrl+N] | golinedown
+| Go line up | kbd:[Up] OR kbd:[Ctrl+P] | kbd:[Up] OR kbd:[Ctrl+P] | golineup
+| Go to end | kbd:[Ctrl+End] | kbd:[Command+End] OR kbd:[Command+Down] | gotoend
+| Go to left | kbd:[Left] OR kbd:[Ctrl+B] | kbd:[Left] OR kbd:[Ctrl+B] | gotoleft
+| Go to line end | kbd:[Alt+Right] OR kbd:[End] | kbd:[Command+Right] OR kbd:[End] OR kbd:[Ctrl+E] | gotolineend
+| Go to line start | kbd:[Alt+Left] OR kbd:[Home] | kbd:[Command+Left] OR kbd:[Home] OR kbd:[Ctrl+A] | gotolinestart
+| Go to line... | kbd:[Ctrl+L] | kbd:[Command+L] | gotoline
+| Go to next error | kbd:[Alt+E] | kbd:[F4] | goToNextError
+| Go to page down | kbd:[Page Down] OR kbd:[Ctrl+V] | kbd:[Page Down] OR kbd:[Ctrl+V] | gotopagedown
+| Go to previous error | kbd:[Alt+Shift+E] | kbd:[Shift+F4] | goToPreviousError
+| Go to right | kbd:[Right] OR kbd:[Ctrl+F] | kbd:[Right] OR kbd:[Ctrl+F] | gotoright
+| Go to start | kbd:[Ctrl+Home] | kbd:[Command+Home] OR kbd:[Command+Up] | gotostart
+| Go to word left | kbd:[Ctrl+Left] | kbd:[Option+Left] | gotowordleft
+| Go to word right | kbd:[Ctrl+Right] | kbd:[Option+Right] | gotowordright
+| Italic selection | kbd:[Ctrl+I] OR kbd:[Ctrl+İ] OR kbd:[Ctrl+I] OR kbd:[Ctrl+I] | kbd:[Command+I] OR kbd:[Command+İ] OR kbd:[Command+I] OR kbd:[Command+I] | italicize-selected
+| Jump to matching | kbd:[Ctrl+\] OR kbd:[Ctrl+P] | kbd:[Command+\] | jumptomatching
+| Modify number down | kbd:[Ctrl+Shift+Down] | kbd:[Alt+Shift+Down] | modifyNumberDown
+| Modify number up | kbd:[Ctrl+Shift+Up] | kbd:[Alt+Shift+Up] | modifyNumberUp
+| Move lines down | kbd:[Alt+Down] | kbd:[Option+Down] | movelinesdown
+| Move lines up | kbd:[Alt+Up] | kbd:[Option+Up] | movelinesup
+| Open Link | kbd:[Ctrl+F3] | kbd:[F3] | openlink
+| Open command palette | kbd:[F1] | kbd:[F1] | openCommandPallete
+| Outdent | kbd:[Shift+Tab] | kbd:[Shift+Tab] | outdent
+| Page down | kbd:[Ctrl+Page Down] | kbd:[Option+Page Down] | pagedown
+| Page up | kbd:[Ctrl+Page Up] | kbd:[Option+Page Up] | pageup
+| Pastes from clipboard to AsciidocFX editor | kbd:[Ctrl+Shift+V] | kbd:[Command+Shift+V] | pasteX
+| Redo | kbd:[Ctrl+Shift+Z] OR kbd:[Ctrl+Y] | kbd:[Command+Shift+Z] OR kbd:[Command+Y] | redo
+| Remove line | kbd:[Ctrl+D] | kbd:[Command+D] | removeline
+| Remove to line end | kbd:[Alt+Delete] | kbd:[Ctrl+K] OR kbd:[Command+Delete] | removetolineend
+| Remove to line start | kbd:[Alt+Backspace] | kbd:[Command+Backspace] | removetolinestart
+| Remove word left | kbd:[Ctrl+Backspace] | kbd:[Alt+Backspace] OR kbd:[Ctrl+Alt+Backspace] | removewordleft
+| Remove word right | kbd:[Ctrl+Delete] | kbd:[Alt+Delete] | removewordright
+| Replace | kbd:[Ctrl+H] | kbd:[Command+Option+F] | replace
+| Replay macro | kbd:[Ctrl+Shift+E] | kbd:[Command+Shift+E] | replaymacro
+| Select all | kbd:[Ctrl+A] | kbd:[Command+A] | selectall
+| Select down | kbd:[Shift+Down] OR kbd:[Ctrl+Shift+N] | kbd:[Shift+Down] OR kbd:[Ctrl+Shift+N] | selectdown
+| Select left | kbd:[Shift+Left] OR kbd:[Ctrl+Shift+B] | kbd:[Shift+Left] OR kbd:[Ctrl+Shift+B] | selectleft
+| Select more after | kbd:[Ctrl+Alt+Right] | kbd:[Ctrl+Alt+Right] | selectMoreAfter
+| Select more before | kbd:[Ctrl+Alt+Left] | kbd:[Ctrl+Alt+Left] | selectMoreBefore
+| Select next after | kbd:[Ctrl+Alt+Shift+Right] | kbd:[Ctrl+Alt+Shift+Right] | selectNextAfter
+| Select next before | kbd:[Ctrl+Alt+Shift+Left] | kbd:[Ctrl+Alt+Shift+Left] | selectNextBefore
+| Select or find next | kbd:[Alt+K] | kbd:[Ctrl+G] | selectOrFindNext
+| Select or find previous | kbd:[Alt+Shift+K] | kbd:[Ctrl+Shift+G] | selectOrFindPrevious
+| Select right | kbd:[Shift+Right] | kbd:[Shift+Right] | selectright
+| Select to end | kbd:[Ctrl+Shift+End] | kbd:[Command+Shift+End] OR kbd:[Command+Shift+Down] | selecttoend
+| Select to line end | kbd:[Alt+Shift+Right] | kbd:[Command+Shift+Right] OR kbd:[Shift+End] OR kbd:[Ctrl+Shift+E] | selecttolineend
+| Select to line start | kbd:[Alt+Shift+Left] | kbd:[Command+Shift+Left] OR kbd:[Ctrl+Shift+A] | selecttolinestart
+| Select to matching | kbd:[Ctrl+Shift+\] OR kbd:[Ctrl+Shift+P] | kbd:[Command+Shift+\] | selecttomatching
+| Select to start | kbd:[Ctrl+Shift+Home] | kbd:[Command+Shift+Home] OR kbd:[Command+Shift+Up] | selecttostart
+| Select up | kbd:[Shift+Up] OR kbd:[Ctrl+Shift+P] | kbd:[Shift+Up] OR kbd:[Ctrl+Shift+P] | selectup
+| Select word left | kbd:[Ctrl+Shift+Left] | kbd:[Option+Shift+Left] | selectwordleft
+| Select word right | kbd:[Ctrl+Shift+Right] | kbd:[Option+Shift+Right] | selectwordright
+| Show Firebug Console | kbd:[F12] | kbd:[F12] | firebug-lite
+| Show line numbers | kbd:[Ctrl+L] | kbd:[Command+L] | line-numbers
+| Show settings menu | kbd:[Ctrl+,] | kbd:[Command+,] | showSettingsMenu
+| Sort lines | kbd:[Ctrl+Alt+S] | kbd:[Command+Alt+S] | sortlines
+| Split into lines | kbd:[Alt+Shift+I] | kbd:[Alt+Shift+I] | splitSelectionIntoLines
+| Split line | | kbd:[Ctrl+O] | splitline
+| Split selection into lines | kbd:[Ctrl+Alt+L] | kbd:[Ctrl+Alt+L] | toggleSplitSelectionIntoLines
+| Tab and Text snippets | kbd:[Tab] | kbd:[Tab] | indent
+| To lowercase | kbd:[Ctrl+Shift+U] | kbd:[Ctrl+Shift+U] | tolowercase
+| To uppercase | kbd:[Ctrl+U] | kbd:[Ctrl+U] | touppercase
+| Toggle block comment | kbd:[Ctrl+Shift+/] | kbd:[Command+Shift+/] | toggleBlockComment
+| Toggle comment | kbd:[Ctrl+/] | kbd:[Command+/] | togglecomment
+| Toggle fold widget | kbd:[F2] | kbd:[F2] | toggleFoldWidget
+| Toggle parent fold widget | kbd:[Alt+F2] | kbd:[Alt+F2] | toggleParentFoldWidget
+| Toggle recording | kbd:[Ctrl+Alt+E] | kbd:[Command+Option+E] | togglerecording
+| Transpose letters | kbd:[Alt+Shift+X] | kbd:[Ctrl+T] | transposeletters
+| Underline selection | kbd:[Ctrl+U] | kbd:[Command+U] | underline-selected
+| Undo | kbd:[Ctrl+Z] | kbd:[Command+Z] | undo
+| Unfold | kbd:[Alt-Shift-L] OR kbd:[Ctrl-Shift-F1] | kbd:[Command-Alt-Shift-L] OR kbd:[Command-Shift-F1] | unfold
+| Unfold all | kbd:[Alt+Shift+0] | kbd:[Command+Option+Shift+0] | unfoldall
+|====
+
+== Known Issues
+
+PDF output shows all text as \####::
+On Linux platforms you can face with this issue. For the getting around for the issue you need to install Microsoft Core Fonts to your platform. How to install <<microsoft-core-fonts>>
+Mac QWERTY Keyboard Bug::
+  There is a bug in JavaFX which makes all keyboards on a Mac behave as "QWERTY".
+  This means, that on a German "QWERTZ" layout the shortcuts for `undo` and `redo` are swapped.
+Text Artifacts (Rainbowing) on Text::
+  If you are being distracted by rainbow text artifacts on text, you can work around the issue by passing some VM options in `[Install_Dir]/AsciidocFX.vmoptions`, as shared in https://github.com/TomasMikula/RichTextFX/issues/145[this RichTextFX bug].
+
+  . Open `AsciidocFX.vmoptions`.
+  . Add `-Dprism.text=t2k` and `-Dprism.lcdtext=false` to the file.
+  . Save and close.
+  . Launch AsciidocFX
+
+
+== Changelog
+
+To see what has changed in recent versions of AsciidocFX, see the https://github.com/asciidocfx/AsciidocFX/blob/master/CHANGELOG.md[CHANGELOG]
+
+== Support
+
+Support AsciidocFX with pull requests or open an issue for bug & feature requests. You can make discussions in https://groups.google.com/d/forum/asciidocfx-discuss[mail group] or in the chat room at https://gitter.im/asciidocfx/AsciidocFX[Gitter.im].
+
+
+////
+openssl sha -sha256 AsciidocFX_Mac.dmg
+////
+
+== Contributors
+
+Thank you to all the people who have already contributed to AsciidocFX!
+image:https://opencollective.com/AsciidocFX/contributors.svg?width=890["Contributors", link="../../graphs/contributors"]
+
+
+== Backers
+
+Thank you to all our backers! [https://opencollective.com/AsciidocFX#backer[Become a backer]]
+
+image:https://opencollective.com/AsciidocFX/backers.svg?width=890["Backers on Open Collective", link="https://opencollective.com/AsciidocFX#backers"]
+
+== Sponsors
+
+Thank you to all our sponsors! (please ask your company to also support this open source project by https://opencollective.com/AsciidocFX#sponsor[becoming a sponsor])
+
+image:https://opencollective.com/AsciidocFX/sponsor/0/avatar.svg[link="https://opencollective.com/AsciidocFX/sponsor/0/website", target="_blank"]
+image:https://opencollective.com/AsciidocFX/sponsor/1/avatar.svg[link="https://opencollective.com/AsciidocFX/sponsor/1/website", target="_blank"]
+image:https://opencollective.com/AsciidocFX/sponsor/2/avatar.svg[link="https://opencollective.com/AsciidocFX/sponsor/2/website", target="_blank"]
+image:https://opencollective.com/AsciidocFX/sponsor/3/avatar.svg[link="https://opencollective.com/AsciidocFX/sponsor/3/website", target="_blank"]
+image:https://opencollective.com/AsciidocFX/sponsor/4/avatar.svg[link="https://opencollective.com/AsciidocFX/sponsor/4/website", target="_blank"]
+image:https://opencollective.com/AsciidocFX/sponsor/5/avatar.svg[link="https://opencollective.com/AsciidocFX/sponsor/5/website", target="_blank"]
+image:https://opencollective.com/AsciidocFX/sponsor/6/avatar.svg[link="https://opencollective.com/AsciidocFX/sponsor/6/website", target="_blank"]
+image:https://opencollective.com/AsciidocFX/sponsor/7/avatar.svg[link="https://opencollective.com/AsciidocFX/sponsor/7/website", target="_blank"]
+image:https://opencollective.com/AsciidocFX/sponsor/8/avatar.svg[link="https://opencollective.com/AsciidocFX/sponsor/8/website", target="_blank"]
+image:https://opencollective.com/AsciidocFX/sponsor/9/avatar.svg[link="https://opencollective.com/AsciidocFX/sponsor/9/website", target="_blank"]

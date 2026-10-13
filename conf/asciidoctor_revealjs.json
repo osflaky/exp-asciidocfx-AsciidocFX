@@ -1,0 +1,14 @@
+
+{
+    "backend":"revealjs",
+    "jsPlatform":"Asciidoctorj",
+    "safe":"unsafe",
+    "header_footer":true,
+    "sourcemap":true,
+    "attributes":{
+        "showtitle": "true",
+        "imagesdir": "images",
+        "allow-uri-read": "true",
+        "experimental": "true"
+    }
+}

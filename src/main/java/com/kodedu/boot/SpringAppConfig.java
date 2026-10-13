@@ -1,0 +1,263 @@
+/*
+ * Copyright 2012-2013 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.kodedu.boot;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kodedu.controller.ApplicationController;
+import com.kodedu.service.AsciidoctorFactory;
+import com.kodedu.service.extension.chart.ChartBlockProcessor;
+import com.kodedu.service.extension.math.block.MathBlockProcessor;
+import com.kodedu.service.extension.math.blockmacro.MathBlockMacroProcessor;
+import com.kodedu.service.extension.math.inlinemacro.MathInlineMacroProcessor;
+import com.kodedu.service.extension.processor.CacheSuffixAppenderProcessor;
+import com.kodedu.service.extension.processor.DataLineProcessor;
+import com.kodedu.service.extension.processor.DocumentAttributeProcessor;
+import com.kodedu.service.extension.processor.XrefIncludeProcessor;
+import com.kodedu.service.extension.tree.FileTreeBlockMacroProcessor;
+import com.kodedu.service.extension.tree.FileTreeBlockProcessor;
+import com.kodedu.service.extension.tree.FileTreeInlineMacroProcessor;
+import org.asciidoctor.Asciidoctor;
+import org.asciidoctor.extension.JavaExtensionRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.core.task.support.TaskExecutorAdapter;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+import javax.net.ssl.SSLContext;
+import java.util.Base64;
+import java.util.concurrent.Executors;
+
+
+@Configuration
+@EnableWebSocket
+@ComponentScan(basePackages = "com.kodedu.**")
+@EnableAutoConfiguration
+public class SpringAppConfig extends SpringBootServletInitializer implements WebSocketConfigurer {
+
+    @Autowired
+    private ApplicationController applicationController;
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(applicationController, "/ws", "/ws*", "/ws/*").withSockJS();
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+
+        return application.sources(SpringAppConfig.class);
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+    @Bean
+    public Base64.Encoder base64Encoder() {
+        return Base64.getEncoder();
+    }
+
+    /*
+        Used for standard html5 backend
+    */
+    @Bean(destroyMethod = "shutdown")
+    @Lazy
+    public Asciidoctor htmlDoctor(ChartBlockProcessor fxChartBlockProcessor,
+                                  FileTreeBlockProcessor treeBlockProcessor,
+                                  MathBlockProcessor[] mathBlockProcessor,
+                                  FileTreeBlockMacroProcessor fileTreeBlockMacroProcessor,
+                                  FileTreeInlineMacroProcessor fileTreeInlineMacroProcessor,
+                                  DataLineProcessor dataLineProcessor,
+                                  XrefIncludeProcessor xrefIncludeProcessor,
+                                  MathBlockMacroProcessor[] mathBlockMacroProcessor,
+                                  MathInlineMacroProcessor[] mathInlineMacroProcessor,
+                                  CacheSuffixAppenderProcessor cacheSuffixAppenderProcessor,
+                                  DocumentAttributeProcessor documentAttributeProcessor) {
+        Asciidoctor asciidoctor = AsciidoctorFactory.getAsciidoctor();
+        JavaExtensionRegistry registry = asciidoctor.javaExtensionRegistry();
+        registry.postprocessor(documentAttributeProcessor);
+        runAsyncConditionally(() -> {
+            registerDefaultExtensions(registry,
+                    fxChartBlockProcessor,
+                    treeBlockProcessor,
+                    mathBlockProcessor,
+                    fileTreeBlockMacroProcessor,
+                    fileTreeInlineMacroProcessor,
+                    dataLineProcessor,
+                    xrefIncludeProcessor,
+                    mathBlockMacroProcessor,
+                    mathInlineMacroProcessor,
+                    cacheSuffixAppenderProcessor);
+            asciidoctor.requireLibrary("openssl", "asciidoctor-diagram");
+        });
+        return asciidoctor;
+    }
+
+    /*
+        Used for reveal.js backend
+    */
+    @Bean(destroyMethod = "shutdown")
+    @Lazy
+    public Asciidoctor revealDoctor(ChartBlockProcessor fxChartBlockProcessor,
+                                  FileTreeBlockProcessor treeBlockProcessor,
+                                  MathBlockProcessor[] mathBlockProcessor,
+                                  FileTreeBlockMacroProcessor fileTreeBlockMacroProcessor,
+                                  FileTreeInlineMacroProcessor fileTreeInlineMacroProcessor,
+                                  DataLineProcessor dataLineProcessor,
+                                  XrefIncludeProcessor xrefIncludeProcessor,
+                                  MathBlockMacroProcessor[] mathBlockMacroProcessor,
+                                  MathInlineMacroProcessor[] mathInlineMacroProcessor,
+                                  CacheSuffixAppenderProcessor cacheSuffixAppenderProcessor,
+                                  DocumentAttributeProcessor documentAttributeProcessor) {
+        Asciidoctor asciidoctor = AsciidoctorFactory.getAsciidoctor();
+        JavaExtensionRegistry registry = asciidoctor.javaExtensionRegistry();
+        registry.postprocessor(documentAttributeProcessor);
+        runAsyncConditionally(() -> {
+            registerDefaultExtensions(registry,
+                    fxChartBlockProcessor,
+                    treeBlockProcessor,
+                    mathBlockProcessor,
+                    fileTreeBlockMacroProcessor,
+                    fileTreeInlineMacroProcessor,
+                    dataLineProcessor,
+                    xrefIncludeProcessor,
+                    mathBlockMacroProcessor,
+                    mathInlineMacroProcessor,
+                    cacheSuffixAppenderProcessor);
+            asciidoctor.requireLibrary("openssl", "asciidoctor-diagram", "asciidoctor-revealjs");
+        });
+        return asciidoctor;
+    }
+
+    private void runAsyncConditionally(Runnable runnable) {
+        if (AppStarter.config.isCmdStart()) {
+            runnable.run();
+        } else {
+            Thread.startVirtualThread(runnable);
+        }
+    }
+
+    /*
+        Used for non-html5 backend like pdf, epub3 etc.
+    */
+    @Bean(destroyMethod = "shutdown")
+    @Lazy
+    public Asciidoctor nonHtmlDoctor(ChartBlockProcessor fxChartBlockProcessor,
+                                     FileTreeBlockProcessor treeBlockProcessor,
+                                     MathBlockProcessor[] mathBlockProcessor,
+                                     FileTreeBlockMacroProcessor fileTreeBlockMacroProcessor,
+                                     FileTreeInlineMacroProcessor fileTreeInlineMacroProcessor,
+                                     DataLineProcessor dataLineProcessor,
+                                     XrefIncludeProcessor xrefIncludeProcessor,
+                                     MathBlockMacroProcessor[] mathBlockMacroProcessor,
+                                     MathInlineMacroProcessor[] mathInlineMacroProcessor,
+                                     CacheSuffixAppenderProcessor cacheSuffixAppenderProcessor) {
+        Asciidoctor asciidoctor = AsciidoctorFactory.getAsciidoctor();
+        JavaExtensionRegistry registry = asciidoctor.javaExtensionRegistry();
+        runAsyncConditionally(() -> {
+            registerDefaultExtensions(registry,
+                    fxChartBlockProcessor,
+                    treeBlockProcessor,
+                    mathBlockProcessor,
+                    fileTreeBlockMacroProcessor,
+                    fileTreeInlineMacroProcessor,
+                    dataLineProcessor,
+                    xrefIncludeProcessor,
+                    mathBlockMacroProcessor,
+                    mathInlineMacroProcessor,
+                    cacheSuffixAppenderProcessor);
+            asciidoctor.requireLibrary("openssl", "asciidoctor-diagram", "asciidoctor-pdf", "asciidoctor-epub3");
+        });
+        return asciidoctor;
+    }
+
+    /*
+     Used for plan render of an Asciidoctor document,
+     to read attributes, document etc.
+     */
+    @Bean(destroyMethod = "shutdown")
+    @Lazy
+    public Asciidoctor plainDoctor(DocumentAttributeProcessor documentAttributeProcessor) {
+        Asciidoctor asciidoctor = AsciidoctorFactory.getAsciidoctor();
+        JavaExtensionRegistry registry = asciidoctor.javaExtensionRegistry();
+        registry.postprocessor(documentAttributeProcessor);
+        runAsyncConditionally(() -> {
+            asciidoctor.requireLibrary("openssl", "asciidoctor-revealjs", "asciidoctor-pdf", "asciidoctor-epub3");
+        });
+        return asciidoctor;
+    }
+
+
+    public JavaExtensionRegistry registerDefaultExtensions(JavaExtensionRegistry registry,
+                                                           ChartBlockProcessor fxChartBlockProcessor,
+                                                           FileTreeBlockProcessor treeBlockProcessor,
+                                                           MathBlockProcessor[] mathBlockProcessor,
+                                                           FileTreeBlockMacroProcessor fileTreeBlockMacroProcessor,
+                                                           FileTreeInlineMacroProcessor fileTreeInlineMacroProcessor,
+                                                           DataLineProcessor dataLineProcessor,
+                                                           XrefIncludeProcessor xrefIncludeProcessor,
+                                                           MathBlockMacroProcessor[] mathBlockMacroProcessor,
+                                                           MathInlineMacroProcessor[] mathInlineMacroProcessor,
+                                                           CacheSuffixAppenderProcessor cacheSuffixAppenderProcessor) {
+
+        registry
+                .treeprocessor(dataLineProcessor)
+                .includeProcessor(xrefIncludeProcessor)
+                .block(fxChartBlockProcessor)
+                .block(treeBlockProcessor)
+                .blockMacro(fileTreeBlockMacroProcessor)
+                .inlineMacro(fileTreeInlineMacroProcessor)
+                .treeprocessor(cacheSuffixAppenderProcessor);
+
+        for (MathInlineMacroProcessor inlineMacroProcessor : mathInlineMacroProcessor) {
+            registry.inlineMacro(inlineMacroProcessor);
+        }
+
+        for (MathBlockProcessor blockProcessor : mathBlockProcessor) {
+            registry.block(blockProcessor);
+        }
+
+        for (MathBlockMacroProcessor blockMacroProcessor : mathBlockMacroProcessor) {
+            registry.blockMacro(blockMacroProcessor);
+        }
+        return registry;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
+
+    @Bean(TaskExecutionAutoConfiguration.APPLICATION_TASK_EXECUTOR_BEAN_NAME)
+    public AsyncTaskExecutor asyncTaskExecutor() {
+        return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor());
+    }
+
+}

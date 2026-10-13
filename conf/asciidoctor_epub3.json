@@ -1,0 +1,13 @@
+
+{
+    "backend":"epub3",
+    "jsPlatform":"Asciidoctorj",
+    "safe":"unsafe",
+    "header_footer":true,
+    "attributes":{
+        "showtitle": "true",
+        "imagesdir": "images",
+        "allow-uri-read": "true",
+        "experimental": "true"
+    }
+}

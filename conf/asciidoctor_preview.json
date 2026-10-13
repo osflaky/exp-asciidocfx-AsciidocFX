@@ -1,0 +1,18 @@
+
+{
+    "jsPlatform":"Asciidoctorj",
+    "safe":"unsafe",
+    "sourcemap":true,
+    "attributes":{
+        "showtitle": "true",
+        "icons":"font@",
+        "source-highlighter":"highlight.js",
+        "idprefix":"true",
+        "apply-data-line": "true",
+        "apply-image-cacher": "true",
+        "imagesdir": "images",
+        "allow-uri-read": "true",
+        "experimental": "true",
+        "nofooter": "true"
+    }
+}
